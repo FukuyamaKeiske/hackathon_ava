@@ -5,7 +5,6 @@ from logging.handlers import TimedRotatingFileHandler
 if not os.path.exists('logs'):
     os.makedirs('logs')
 
-# Настройка логирования
 logger = logging.getLogger("my_logger")
 logger.setLevel(logging.INFO)
 

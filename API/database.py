@@ -14,7 +14,7 @@ async def register_user(email, password):
     user_id = await db.Users.insert_one({
         "email": email,
         "password": hashed_password,
-        "businesses": []  # Инициализируем пустой список бизнесов
+        "businesses": []
     })
     return str(user_id.inserted_id)
 
@@ -43,25 +43,18 @@ async def add_business(user_id, name, sphere, size, type_, specialization):
 
 
 async def init_db():
-    """
-    Инициализирует базу данных, добавляя ссылки из файла links.txt в коллекцию ChatGPTLinks,
-    если они еще не существуют.
-    """
     with open("links.txt", "r") as file:
-        # Читаем все строки из файла и удаляем пробелы в начале и конце каждой строки
         links = [line.strip() for line in file]
 
     for link in links:
-        # Проверяем, существует ли ссылка в коллекции ChatGPTLinks
         existing_link = await db.ChatGPTLinks.find_one({"_id": link})
         if not existing_link:
-            # Если ссылка не найдена, вставляем новую запись
             await db.ChatGPTLinks.insert_one({
-                "_id": link,  # Устанавливаем _id как саму ссылку
-                "requests_made": 0,  # Инициализируем количество запросов
-                "last_request_successful": False,  # Флаг успешности последнего запроса
-                "total_symbols_generated": 0,  # Общее количество сгенерированных символов
-                "total_time_spent": 0  # Общее время, затраченное на генерацию
+                "_id": link,
+                "requests_made": 0,
+                "last_request_successful": False,
+                "total_symbols_generated": 0,
+                "total_time_spent": 0
             })
 
 

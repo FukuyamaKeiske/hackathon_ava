@@ -10,12 +10,10 @@ import asyncio
 
 router = APIRouter()
 
-# Загрузка модели и токенизатора
 model_path = "saved_bert_model"
 model = tf.keras.models.load_model(model_path)
 tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
 
-# Подключение к базе данных и загрузка документов
 client = AsyncIOMotorClient("mongodb://localhost:27017/")
 db = client["HelpBusiness"]
 collection = db["Websites"]
@@ -33,23 +31,19 @@ async def load_documents():
 documents = {}
 document_embeddings = None
 
-# Функция для получения эмбеддингов
 def get_embeddings(texts):
     inputs = tokenizer(texts, return_tensors="tf", padding=True, truncation=True, max_length=128)
     bert_model = TFBertModel.from_pretrained("bert-base-uncased")
     outputs = bert_model(inputs)
     return outputs.last_hidden_state[:, 0, :].numpy()
 
-# Обновление эмбеддингов
 async def update_document_embeddings():
     global documents, document_embeddings
     documents = await load_documents()
     document_embeddings = get_embeddings(list(documents.values()))
 
-# Инициализация эмбеддингов при старте
 asyncio.run(update_document_embeddings())
 
-# Функция для поиска релевантных документов
 def find_relevant_documents(query, document_embeddings, documents):
     query_embedding = get_embeddings([query])
     similarities = cosine_similarity(query_embedding, document_embeddings)
@@ -58,16 +52,10 @@ def find_relevant_documents(query, document_embeddings, documents):
 
 @router.post("/process_text")
 async def process_text(request: TextRequest):
-    """
-    Обрабатывает текстовый запрос пользователя, используя обученную модель.
-    """
     relevant_documents = find_relevant_documents(request.text, document_embeddings, documents)
     if relevant_documents:
-        # Сохраняем исходное сообщение пользователя
         await save_user_message(request.user_id, "user", request.text)
-        # Формируем ответ на основе релевантных документов
         result = " ".join([doc_text for _, doc_text in relevant_documents])
-        # Сохраняем ответ
         await save_user_message(request.user_id, "bot", result)
         return {"result": result}
     raise HTTPException(status_code=500, detail="Failed to process text")

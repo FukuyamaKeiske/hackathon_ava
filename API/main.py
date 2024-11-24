@@ -15,13 +15,11 @@ app = FastAPI()
 app.include_router(auth_router, tags=["auth"])
 app.include_router(text_router, tags=["text"])
 
-# Функция для бэкапа и очистки логов
 def backup_logs():
     date_str = datetime.now().strftime("%Y-%m-%d")
     backup_filename = f'logs/{date_str}_logs.txt.bak'
     shutil.copy('logs/logs.txt', backup_filename)
 
-    # Удаление файлов старше 7 дней
     cutoff_date = datetime.now() - timedelta(days=7)
     for filename in os.listdir('logs'):
         if filename.endswith('.bak'):
@@ -30,7 +28,6 @@ def backup_logs():
             if file_date < cutoff_date:
                 os.remove(os.path.join('logs', filename))
 
-# Запуск планировщика
 scheduler = BackgroundScheduler()
 scheduler.add_job(backup_logs, 'cron', hour=0, minute=0, timezone='Europe/Moscow')
 scheduler.start()
