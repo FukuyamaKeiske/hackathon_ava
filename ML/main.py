@@ -52,16 +52,18 @@ if train_model:
     train_dataset = tf.data.Dataset.from_tensor_slices((dict(train_encodings), train_labels)).shuffle(1000).batch(16)
     val_dataset = tf.data.Dataset.from_tensor_slices((dict(val_encodings), val_labels)).batch(16)
 
+    # Добавление дропаута для регуляризации
     model.layers[-1].rate = 0.3
 
     model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=5e-5),
                   loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
                   metrics=["accuracy"])
 
-    model.fit(train_dataset, validation_data=val_dataset, epochs=20)
+    model.fit(train_dataset, validation_data=val_dataset, epochs=20)  # Увеличено количество эпох
 
     model.save(model_path)
 
+# Получение эмбеддингов для документов
 def get_embeddings(texts):
     inputs = tokenizer(texts, return_tensors="tf", padding=True, truncation=True, max_length=128)
     bert_model = TFBertModel.from_pretrained("bert-base-uncased")
@@ -76,9 +78,8 @@ def find_relevant_documents(query, document_embeddings, documents):
     most_relevant_indices = np.argsort(similarities[0])[-4:][::-1]
     return [(list(documents.keys())[i], list(documents.values())[i]) for i in most_relevant_indices]
 
-while True:
-    query = input("Вопрос >>> ")
-    relevant_documents = find_relevant_documents(query, document_embeddings, documents)
-    print("Наиболее релевантные документы:")
-    for hash_key, doc_text in relevant_documents:
-        print(f"{hash_key}: {doc_text}")
+query = input("Вопрос >>> ")
+relevant_documents = find_relevant_documents(query, document_embeddings, documents)
+print("Наиболее релевантные документы:")
+for hash_key, doc_text in relevant_documents:
+    print(f"{hash_key}: {doc_text}")
