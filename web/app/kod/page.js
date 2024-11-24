@@ -13,14 +13,14 @@ export default function Home() {
                   <div className="w-[832px] h-[70px] text-[#84f8a1] text-[50px] font-bold font-['Angst']">отправленный
                       на вашу почту
                   </div>
-                  <div
-                      className="w-[810px] h-[73px] bg-[#d9d9d9]/10 rounded-[30px] border-4 border-[#83f8a0] backdrop-blur-[50px]"></div>
+                  <input
+                      className="text-white w-[810px] h-[73px] bg-[#d9d9d9]/10 rounded-[30px] border-4 border-[#83f8a0] backdrop-blur-[50px]"></input>
               </div>
               <div
                   className="w-[869px] h-[129px] bg-[#d9d9d9]/10 rounded-[30px] backdrop-blur-[50px] flex justify-center items-center flex-col mt-[250px]">
-                  <div
+                  <a href="/chat"
                       className="w-[579px] h-14 text-[#eaa1fc] text-[65px] font-bold font-['Angst'] flex justify-center items-center flex-col">далее
-                  </div>
+                  </a>
               </div>
 
           </div>

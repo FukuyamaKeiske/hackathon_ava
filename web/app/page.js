@@ -24,9 +24,9 @@ export default function Home() {
 
               <div
                   className="w-[995px] h-28 bg-[#d9d9d9]/10 rounded-[30px] backdrop-blur-[50px] mt-[100px] flex justify-center items-center flex-col align-middle  ">
-                  <div
+                  <a href="/registratsya"
                       className="w-[902px] h-[97px] text-[#eaa1fc] text-[80px] font-bold font-['Angst'] flex justify-center items-center flex-col">зарегистрироваться
-                  </div>
+                  </a>
               </div>
               <div
                   className="w-[995px] h-28 bg-[#d9d9d9]/10 rounded-[30px] backdrop-blur-[50px] flex justify-center items-center flex-col align-middle">

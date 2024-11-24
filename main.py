@@ -1,10 +1,9 @@
 import asyncio
 from fastapi import FastAPI
-from auth import router as auth_router
-from text_processing import router as text_router
-from database import init_db
+from api.text_processing import router as text_router
 import uvicorn
-from logging_config import logger
+from api.logging_config import logger
+from api.auth import router as auth_router
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime, timedelta
 import shutil
@@ -32,10 +31,5 @@ scheduler = BackgroundScheduler()
 scheduler.add_job(backup_logs, 'cron', hour=0, minute=0, timezone='Europe/Moscow')
 scheduler.start()
 
-@app.on_event("shutdown")
-def shutdown_event():
-    scheduler.shutdown()
-
 if __name__ == "__main__":
-    asyncio.run(init_db())
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

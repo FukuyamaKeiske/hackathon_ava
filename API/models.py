@@ -11,6 +11,7 @@ class UserLogin(BaseModel):
 class TextRequest(BaseModel):
     user_id: str
     text: str
+    business_id: str
 
 class BusinessRegister(BaseModel):
     user_id: str
