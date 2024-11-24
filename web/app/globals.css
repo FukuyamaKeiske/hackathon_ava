@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: Angst;
+  src: url("/font/AngstVF.ttf")
+}
+
+body {
+  font-family: Angst;
+  font-weight: bold;
+}
